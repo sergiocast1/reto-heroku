@@ -1,40 +1,46 @@
 library(shiny)
+library(dplyr)
 require(readr)
+library(geosphere)
+library(ggplot2)
 
 bike <- read.csv("https://raw.githubusercontent.com/sergiocast1/reto-sergio-castrillo/master/citibike-tripdata.csv")
-countries <- read_csv("http://becomingvisual.com/rfundamentals/countries.csv")
 
-# Define UI for application that draws a scatterplot
+bike <- bike %>%
+  mutate(time= difftime(ended_at, started_at, units = "mins"))
+
 ui <- fluidPage(
-  
-  # Application title
-  titlePanel("Country Data"),
-  
-  # Sidebar with a slider input for number of bins 
+  titlePanel("Bike Data Shiny"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("country",
-                  "Countries",
-                  paste(countries$Country), 
-                  selected = "China", multiple = FALSE)
-    ),
+      # inputs
+    ),  
     
-    # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("countryPlot")
-    )
+      # outputs
+      plotOutput("bikeplot")
+      
+    ) 
+  ) 
   )
-)
+
+#bike <- bike %>%
+#  mutate(distancia= distm(x = bike[, c('start_lng', 'start_lat')], 
+#                          y = bike[, c('end_lng', 'end_lat')],
+#                          fun = distHaversine))
+
 
 # Define server logic required to draw a scatterplot
 server <- function(input, output) {
-  
-  output$countryPlot <- renderPlot({
-    country = input$country
-    plot(countries$Population, countries$`GDP ($ per capita)`, col=ifelse(countries$Country==country, "red","black"),
-         main = "Population and GDP", xlab = "Population", ylab = "GDP ($ per capita)",log="xy")
-    options(scipen=999)
-  })
+  output$bikeplot <- renderPlot({
+    ggplot(bike, aes(x=as.factor(rideable_type), fill=as.factor(rideable_type) )) +
+      geom_bar() + 
+      scale_fill_hue(c = 40) +
+      theme(legend.position="none")+
+      xlab("Cantidad") +
+      ylab("Tipo Bici") +
+      ggtitle("Tipos de Bicis")
+  })                                                
 }
 # Run the application 
 shinyApp(ui = ui, server = server)
