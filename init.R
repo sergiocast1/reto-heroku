@@ -1,4 +1,4 @@
-my_packages <- c("shiny","readr")
+my_packages <- c("dplyr","readr","ggplot2","geosphere","shiny")
 install_if_missing <- function(p) {
   if(p %in% rownames(installed.packages())==FALSE){
     install.packages(p)}
