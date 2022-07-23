@@ -1,7 +1,7 @@
 library(shiny)
 require(readr)
 
-bike <-read.csv("https://raw.githubusercontent.com/sergiocast1/reto-sergio-castrillo/master/citibike-tripdata.csv")
+bike <- read.csv("https://raw.githubusercontent.com/sergiocast1/reto-sergio-castrillo/master/citibike-tripdata.csv")
 countries <- read_csv("http://becomingvisual.com/rfundamentals/countries.csv")
 
 # Define UI for application that draws a scatterplot
